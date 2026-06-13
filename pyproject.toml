@@ -7,7 +7,7 @@ name = "iprad"
 version = "0.0.4"
 description = "Powerful IP checker"
 authors = [
-    {name = "Avsbestua", email = "widzmien333@gmail.com"}
+    {name = "deltaaa00", email = "deltaaa.crypto@proton.me"}
 ]
 readme = "README.md"
 requires-python = ">=3.10"

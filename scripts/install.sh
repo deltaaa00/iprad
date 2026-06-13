@@ -1,6 +1,6 @@
 #!/bin/bash
 
-curl -L -o iprad.zip https://github.com/avsbestua/iprad/archive/refs/heads/main.zip
+curl -L -o iprad.zip https://github.com/deltaaa00/iprad/archive/refs/heads/main.zip
 
 
 HASH_FILE="$HOME/iprad.hash"

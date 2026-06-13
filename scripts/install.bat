@@ -1,7 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 
-curl -L -k -o iprad.zip https://github.com/avsbestua/iprad/archive/refs/heads/main.zip
+curl -L -k -o iprad.zip https://github.com/deltaaa00/iprad/archive/refs/heads/main.zip
 
 
 set "hash_file=%USERPROFILE%\iprad.hash"

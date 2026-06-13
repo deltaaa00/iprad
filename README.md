@@ -1,9 +1,9 @@
 ![banner](assets/banner.png)
 <p align="center">
-  <img src="https://img.shields.io/github/license/avsbestua/iprad?style=flat-square" alt="License">
+  <img src="https://img.shields.io/github/license/deltaaa00/iprad?style=flat-square" alt="License">
   <img src="https://img.shields.io/badge/python-3.10%2B-blue?style=flat-square&logo=python" alt="Python Version">
-  <img src="https://img.shields.io/github/stars/avsbestua/iprad?style=flat-square" alt="Stars">
-  <img src="https://img.shields.io/github/last-commit/avsbestua/iprad?style=flat-square" alt="Last Commit">
+  <img src="https://img.shields.io/github/stars/deltaaa00/iprad?style=flat-square" alt="Stars">
+  <img src="https://img.shields.io/github/last-commit/deltaaa00/iprad?style=flat-square" alt="Last Commit">
 </p>
 
 **iprad** - modular Python-based CLI utility designed for IP Lookup. Built with scalability in mind, it separates core logic into distinct modules for easier maintenance and expansion. 
@@ -31,17 +31,17 @@ Now it is installed in your system
 You can run this commands for installation
 ```bash
 #macOS or Linux
-curl -L https://raw.githubusercontent.com/avsbestua/iprad/refs/heads/main/scripts/install.sh | bash
+curl -L https://raw.githubusercontent.com/deltaaa00/iprad/refs/heads/main/scripts/install.sh | bash
 ```
 
 ```bash
-curl -k -L https://raw.githubusercontent.com/avsbestua/iprad/refs/heads/main/scripts/install.bat -o install.bat && install.bat
+curl -k -L https://raw.githubusercontent.com/deltaaa00/iprad/refs/heads/main/scripts/install.bat -o install.bat && install.bat
 ```
 
 ### For Developers (Editable Mode)
 If you plan to modify the code and want changes to take effect immediately:
 ```bash
-git clone https://github.com/avsbestua/iprad.git
+git clone https://github.com/deltaaa00/iprad.git
 cd iprad
 pip install -e .
 ```
