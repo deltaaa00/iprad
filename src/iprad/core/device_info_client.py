@@ -6,15 +6,29 @@ from rich import print as rprint
 import socket
 import uuid
 import requests
-import netifaces
+import psutil
+import subprocess
+import re
 
 def get_gateway_ip():
-    gateways = netifaces.gateways()
-    
-    default_gateway = gateways.get('default', {}).get(netifaces.AF_INET)
-    
-    if default_gateway:
-        return default_gateway[0] 
+    try:
+        result = subprocess.check_output(
+            ["ipconfig"],
+            text=True,
+            encoding="cp866"
+        )
+
+        match = re.search(
+            r"Default Gateway[ .]*: ([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)",
+            result
+        )
+
+        if match:
+            return match.group(1)
+
+    except Exception:
+        pass
+
     return "Unknown"
 
 class SelfInfoClient:
@@ -47,7 +61,7 @@ class SelfInfoClient:
                     f"[bold cyan]MAC Address:[/] {mac}\n"
                     f"[bold cyan]Hostname:[/] {hostname}\n"
 
-                    f"[bold yellow]Interfaces: [/] {netifaces.interfaces()}"
+                    f"[bold yellow]Interfaces: [/] {list(psutil.net_if_addrs().keys())}"
                     
                     )
 
