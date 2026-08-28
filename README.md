@@ -15,7 +15,7 @@
 **iprad** supports only Ipv4 addresses. Also you can write domain, like `google.com` when using **iprad**. 
 
 # 💻 Architecture
-* **Modular Design**: Core functionality is encapsulated within the `src/iprad/core` package.
+* **Modular Design**: Core functionality is encapsulated within the `iprad/core` package.
 * **Package Management**: Uses `pyproject.toml` for modern dependency management and entry point configuration.
 * **Data Persistence**: Includes a local `.cache` directory for caching results.
 # 🚀 Installation
