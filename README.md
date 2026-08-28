@@ -1,13 +1,12 @@
 ![banner](assets/banner.png)
 <p align="center">
-  <img src="https://img.shields.io/github/license/deltaaa00/iprad?style=flat-square" alt="License">
-  <img src="https://img.shields.io/badge/python-3.10%2B-blue?style=flat-square&logo=python" alt="Python Version">
-  <img src="https://img.shields.io/github/stars/deltaaa00/iprad?style=flat-square" alt="Stars">
-  <img src="https://img.shields.io/github/last-commit/deltaaa00/iprad?style=flat-square" alt="Last Commit">
-  <img src="https://img.shields.io/pypi/v/iprad?color=00c853&style=for-the-badge">
-  <img src="https://img.shields.io/pypi/dm/iprad?color=blue&style=for-the-badge">
-  <img src="https://img.shields.io/github/actions/workflow/status/deltaaa00/iprad/publish.yml?style=for-the-badge&label=build">
-  <img src="https://img.shields.io/github/license/deltaaa00/iprad?style=for-the-badge&color=orange">
+  <img src="https://img.shields.io/github/license/deltaaa00/iprad?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/badge/python-3.10%2B-blue?style=for-the-badge&logo=python" alt="Python Version">
+  <img src="https://img.shields.io/github/stars/deltaaa00/iprad?style=for-the-badge" alt="Stars">
+  <img src="https://img.shields.io/github/last-commit/deltaaa00/iprad?style=for-the-badge" alt="Last Commit">
+  <img src="https://img.shields.io/pypi/v/iprad?color=00c853&style=for-the-badge" alt="pypi version">
+  <img src="https://img.shields.io/pypi/dm/iprad?color=blue&style=for-the-badge" alt="downloads">
+  <img src="https://img.shields.io/github/actions/workflow/status/deltaaa00/iprad/publish.yml?style=for-the-badge&label=build" alt="build status">
 </p>
 
 **iprad** - modular Python-based CLI utility designed for IP Lookup. Built with scalability in mind, it separates core logic into distinct modules for easier maintenance and expansion. 
