@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "iprad"
 version = "0.0.4"
-description = "Powerful IP checker"
+description = "Powerful open-source IP checking tool"
 authors = [
     {name = "deltaaa00", email = "deltaaa.crypto@proton.me"}
 ]
@@ -26,4 +26,4 @@ dependencies = [
 iprad = "iprad.cli:main"
 
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["."]
