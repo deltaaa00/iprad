@@ -117,7 +117,7 @@
                         <i class="fas fa-microchip text-emerald-400 text-xl"></i>
                     </div>
                     <h3 class="text-xl font-semibold mb-3 text-white">Modular Logic</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">Functional logic is isolated in <code>src/iprad/core</code>, allowing developers to plug in new lookup providers easily.</p>
+                    <p class="text-slate-400 text-sm leading-relaxed">Functional logic is isolated in <code>iprad/core</code>, allowing developers to plug in new lookup providers easily.</p>
                 </div>
                 <!-- Feature 2 -->
                 <div class="feature-card p-8 rounded-2xl bg-slate-950 border border-slate-800 transition-all">
@@ -132,8 +132,8 @@
                     <div class="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center mb-6">
                         <i class="fa-solid fa-gears text-green-400 text-xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-3 text-white text-sm">Update via the installer</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">Just run install script for update and script will download latest version from GitHub</p>
+                    <h3 class="text-xl font-semibold mb-3 text-white text-sm">Update via pip</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Just run install <code>pip install --upgrade iprad </code> to update and newest version will be downloaded from PyPi</p>
                 </div>
             </div>
         </div>
@@ -142,23 +142,39 @@
     <!-- Installation -->
     <section id="installation" class="pt-10 px-4">
         <div class="max-w-5xl mx-auto">
+
             <div class="mb-7">
                 <h2 class="text-3xl font-bold mb-8 flex items-center gap-3 text-white">
-                    <i class="fab fa-apple text-emerald-500"></i>  <i class="fab fa-linux text-emerald-500"></i>Installation/Updating on macOS/Linux
+                    <i class="fab fa-apple text-emerald-500"></i>
+                    <i class="fab fa-windows text-emerald-500"></i>
+                    <i class="fab fa-linux text-emerald-500"></i>
+                    Installation/Updating
                 </h2>
-                <div class="code-block p-8 rounded-xl font-mono text-sm space-y-3 overflow-x-auto shadow-inner">
-                    <p><span class="text-emerald-500">curl -L</span> https://raw.githubusercontent.com/deltaaa00/iprad/refs/heads/main/scripts/install.sh | bash</p>
-                </div>
             </div>
-        </div>
-        <div class="max-w-5xl mx-auto">
-            <div class="mb-20">
-                <h2 class="text-3xl font-bold mb-8 flex items-center gap-3 text-white">
-                    <i class="fab fa-windows text-emerald-500"></i>Installation/Updating on Windows
-                </h2>
-                <div class="code-block p-8 rounded-xl font-mono text-sm space-y-3 overflow-x-auto shadow-inner">
-                    <p><span class="text-emerald-500">curl</span> -k -L https://raw.githubusercontent.com/deltaaa00/iprad/refs/heads/main/scripts/install.bat -o install.bat && install.bat</p>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-12">
+                <!-- Installation -->
+                <div class="bg-slate-900/50 p-6 rounded-xl border border-slate-800 hover:border-emerald-900/50 transition flex flex-col justify-between">
+                    <div>
+                        <h4 class="font-bold mb-4 text-emerald-400 flex items-center gap-2 uppercase text-xs tracking-widest">
+                            <i class="fas fa-download"></i> Installation
+                        </h4>
+                        <div class="font-mono text-sm text-slate-300 mt-6">
+                            <p><span class="text-emerald-500">pip</span> install iprad</p>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Updating -->
+                <div class="bg-slate-900/50 p-6 rounded-xl border border-slate-800 hover:border-emerald-900/50 transition flex flex-col justify-between">
+                    <div>
+                        <h4 class="font-bold mb-4 text-emerald-400 flex items-center gap-2 uppercase text-xs tracking-widest">
+                            <i class="fas fa-sync-alt"></i> Updating
+                        </h4>
+                        <div class="font-mono text-sm text-slate-300 mt-6">
+                            <p><span class="text-emerald-500">pip</span> install --upgrade iprad</p>
+                        </div>
+                    </div>
             </div>
         </div>
     </section>
