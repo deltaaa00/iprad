@@ -20,22 +20,23 @@
 Project uses `pyproject.toml`, you can install it as a package directly from the source.
 
 ### Standard installation
+
+`iprad` can be installed with `pip`
+
+### Windows
 ```bash
-git clone
+pip install iprad
+```
+
+### Linux/macOS
+```bash
+pip3 install iprad
+```
+Also you can install it via `git clone`
+```bash
+git clone https://github.com/deltaaa00/iprad.git
 cd iprad
 pip install .
-```
-Now it is installed in your system
-
-### Alternative method
-You can run this commands for installation
-```bash
-#macOS or Linux
-curl -L https://raw.githubusercontent.com/deltaaa00/iprad/refs/heads/main/scripts/install.sh | bash
-```
-
-```bash
-curl -k -L https://raw.githubusercontent.com/deltaaa00/iprad/refs/heads/main/scripts/install.bat -o install.bat && install.bat
 ```
 
 ### For Developers (Editable Mode)
