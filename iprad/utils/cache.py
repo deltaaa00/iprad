@@ -1,5 +1,6 @@
 import json
 import requests
+import os
 from dotenv import load_dotenv, find_dotenv
 from os import getenv
 from iprad.utils.functions import normalize_rdap_data
@@ -72,8 +73,13 @@ def cache_processing(module_name: str, identifier: str, url=None):
 
     if cache_file.exists():
         with open(cache_file, 'r') as f:
-            from_cache = True
-            return json.load(f), from_cache
+            data = json.load(f)
+            created_at = data.get("created_at") if type(data.get("created_at")) == datetime else datetime.fromisoformat(data.get("created_at"))
+            time_diff = (datetime.now() - created_at).total_seconds() / 3600
+        if time_diff >= 48:
+            os.remove(cache_file)
+        from_cache = True
+        return data, from_cache
 
         
     #identifier = ip
