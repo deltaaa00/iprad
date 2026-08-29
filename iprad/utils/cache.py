@@ -1,9 +1,8 @@
-import os
 import json
 import requests
-import whois
 from dotenv import load_dotenv, find_dotenv
 from os import getenv
+from iprad.utils.functions import normalize_rdap_data
 
 from pathlib import Path
 from datetime import datetime
@@ -16,17 +15,18 @@ console = Console()
 load_dotenv(find_dotenv())
 ABUSEIPDB_API_KEY = getenv("ABUSEIPDB_API_KEY")
 
-def fetch(url: str, module_name: str, ip: str) -> str:
+def fetch(url: str, module_name: str, ip: str):
     try:
-        if module_name not in ['whois', 'abuseipdb']:
+        if module_name not in ['abuseipdb']:
             response = requests.get(url)
             response.raise_for_status()
 
             data = response.json()
-        else:
-            if module_name == 'whois':
-                data = whois.whois(ip)
+            data['created_at'] = datetime.now()
 
+            if module_name == 'whois':
+                data = normalize_rdap_data(data, ip)
+        else:
             if module_name == 'abuseipdb':
                 params = {
                     'ipAddress': ip,
@@ -65,7 +65,7 @@ def json_serial(obj):
 
 def cache_processing(module_name: str, identifier: str, url=None):
     #Cache function
-    cache_file = CACHE / module_name / f"{identifier}.json"
+    cache_file = CACHE / module_name / f"{identifier.replace(".", "_")}.json"
     module_dir = CACHE / module_name
 
     from_cache = False
@@ -78,8 +78,14 @@ def cache_processing(module_name: str, identifier: str, url=None):
         
     #identifier = ip
     data = fetch(url, module_name, identifier)
+
     if data is None:
-        return None, None     
+        return None, None
+
+    #adding cache create time
+
+    data['created_at'] = datetime.now()
+
 
     #Writing data to cache
     if data:

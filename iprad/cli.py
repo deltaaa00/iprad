@@ -1,3 +1,5 @@
+from os import name
+
 import click
 import shutil
 from iprad.core.ipinfo_client import IPinfoClient

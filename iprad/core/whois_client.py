@@ -1,4 +1,4 @@
-import whois
+from datetime import datetime
 
 from rich.console import Console
 from rich.panel import Panel
@@ -10,8 +10,8 @@ from iprad.utils.functions import get_flag, get_resolved_ip
 class WhoIsClient:
     def check_ip(self, ip: str):
 
-        #resolve ip 
-        ip_resolved = get_resolved_ip(ip)
+        #resolving
+        ip = get_resolved_ip(ip)
         
         
         console = Console()
@@ -20,13 +20,13 @@ class WhoIsClient:
         #Fetching data from whois
         with console.status("[bold green]Fetching and processing Data...") as status:
             
-            data, from_cache = cache_processing("whois", ip_resolved)
+            data, from_cache = cache_processing("whois", ip, url=f"https://rdap.org/ip/{ip}")
 
             
             if data is None:
                 return None
             
-            domain = data.get('domain_name')
+            domain = data.get('domain')
             if isinstance(domain, list): domain = domain[0]
 
             emails = data.get('emails', [])
@@ -49,5 +49,5 @@ class WhoIsClient:
             )
 
 
-
-        console.print(Panel(info, title=f"[bold cyan]Whois Report for {ip} ({ip_resolved})", subtitle=f"[bold blue]From Cache: [/] {from_cache}"))
+        created_at = data.get("created_at") if type(data.get("created_at")) == datetime else datetime.fromisoformat(data.get("created_at"))
+        console.print(Panel(info, title=f"[bold cyan]Whois Report for {ip}", subtitle=f"[bold blue]From Cache:[/] {from_cache}   [bold blue]Created at: [/]{created_at.strftime('%d.%m.%Y %H:%M')}"))

@@ -1,7 +1,5 @@
 from rich.console import Console
 from rich.panel import Panel
-from iprad.utils.functions import get_flag
-from rich import print as rprint
 
 import socket
 import uuid

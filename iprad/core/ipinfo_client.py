@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from rich.console import Console
 from rich.panel import Panel
 from iprad.utils.cache import cache_processing
@@ -40,6 +42,5 @@ class IPinfoClient:
                 f"[bold purple]Anycast:[/] {data.get('anycast')}"
             )
 
-
-
-        console.print(Panel(info, title=f"[bold cyan]IPInfo Report for {ip} ({data.get('ip')})", subtitle=f"[bold blue]From Cache: [/] {from_cache}"))
+        created_at = data.get("created_at") if type(data.get("created_at")) == datetime else datetime.fromisoformat(data.get("created_at"))
+        console.print(Panel(info, title=f"[bold cyan]IPInfo Report for {ip} ({data.get('ip')})", subtitle=f"[bold blue]From Cache:[/] {from_cache}   [bold blue]Created at: [/]{created_at.strftime('%d.%m.%Y %H:%M')}"))

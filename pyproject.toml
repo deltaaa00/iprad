@@ -16,10 +16,10 @@ dependencies = [
     "click>=8.1.0",
     "requests>=2.31.0",
     "rich>=13.0.0",
-    "python-whois>=0.8.0",
     "icmplib>=3.0.4",
     "python-dotenv>=0.9.9",
     "psutil>=6.0.0",
+    "whoisdomain>=2.20260806.3"
 ]
 
 [project.scripts]
