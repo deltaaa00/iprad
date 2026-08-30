@@ -92,13 +92,20 @@ If you don't want to use API Keys you can run with `--nokeys`
 iprad check 1.1.1.1 --nokeys
 ```
 
-### Cache cleaning 🧹
+### Cache 🧹
 **iprad** has cache function. If you want to clean cache run this:
 ```bash
-iprad rmcache
+iprad cache rm
 ```
-
 You will get this message
-```markdown
-> Cache removed successfully
+```
+Cache removed successfully
+```
+Also you can check cache size via this command:
+```bash
+iprad cache info
+```
+You will get this message similar to this:
+```
+Cache Size:  0.07MB
 ```
