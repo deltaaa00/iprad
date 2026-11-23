@@ -1,4 +1,5 @@
 import socket
+import ipaddress
 
 def get_flag(country_code: str) -> str:
     #Get flag from country code
@@ -10,14 +11,13 @@ def get_flag(country_code: str) -> str:
 #Dns resolve 
 def get_resolved_ip(user_inp: str) -> str | None:
     try:
-        socket.inet_aton(user_inp)
-
-
-        return user_inp
-    
-    except socket.error:
+        return str(ipaddress.ip_address(user_inp))
+    except ValueError:
         try:
-            return socket.gethostbyname(user_inp)
+            # Prefer IPv4 for existing domain lookups; accept IPv6-only hosts.
+            addresses = socket.getaddrinfo(user_inp, None, type=socket.SOCK_STREAM)
+            addresses.sort(key=lambda item: item[0] != socket.AF_INET)
+            return addresses[0][4][0] if addresses else None
         except socket.gaierror:
             return None
 

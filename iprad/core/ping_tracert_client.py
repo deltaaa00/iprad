@@ -15,6 +15,10 @@ class PingTracertClient:
         console = Console()
         # console.clear()
         
+        if ip_resolved is None:
+            console.print("Unable to resolve IP address:", ip, style="bold red", markup=False)
+            return None
+
         #Pinging
         with console.status("[bold green]Pinging...") as status:
 

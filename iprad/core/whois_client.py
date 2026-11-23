@@ -8,19 +8,23 @@ from iprad.utils.functions import get_flag, get_resolved_ip
 #Whois module
 
 class WhoIsClient:
-    def check_ip(self, ip: str):
+    def check_ip(self, ip: str, **options):
 
         #resolving
-        ip = get_resolved_ip(ip)
+        ip_resolved = get_resolved_ip(ip)
         
         
         console = Console()
+        if ip_resolved is None:
+            console.print("Unable to resolve IP address for input:", ip, style="bold red", markup=False)
+            return None
+        ip = ip_resolved
         # console.clear()
         
         #Fetching data from whois
         with console.status("[bold green]Fetching and processing Data...") as status:
             
-            data, from_cache = cache_processing("whois", ip, url=f"https://rdap.org/ip/{ip}")
+            data, from_cache = cache_processing("whois", ip, url=f"https://rdap.org/ip/{ip}", **options)
 
             
             if data is None:

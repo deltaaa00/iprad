@@ -12,7 +12,7 @@
 **iprad** - modular Python-based CLI utility designed for IP Lookup. Built with scalability in mind, it separates core logic into distinct modules for easier maintenance and expansion. 
 
 # ❗️IP Type 
-**iprad** supports only Ipv4 addresses. Also you can write domain, like `google.com` when using **iprad**. 
+**iprad** supports IPv4, IPv6, and domain names such as `google.com`. Domain lookups prefer IPv4 and fall back to IPv6 for IPv6-only hosts. IPv6 addresses are normalized before lookup and caching.
 
 # 💻 Architecture
 * **Modular Design**: Core functionality is encapsulated within the `iprad/core` package.
@@ -109,3 +109,44 @@ You will get this message similar to this:
 ```
 Cache Size:  0.07MB
 ```
+
+### Request retries and timeouts
+
+Lookup requests retry transient connection/read failures and HTTP 429, 500, 502,
+503, and 504 responses. The default is two retries after the initial attempt,
+with exponential backoff. Other HTTP errors (such as 401 and 403) are not retried.
+Each attempt has a 10-second connect/read timeout; this is not a total command deadline.
+
+```bash
+iprad check 1.1.1.1 --nokeys --retries 3 --timeout 5
+iprad check 2606:4700:4700::1111 --nokeys
+```
+
+Use `--retries 0` to disable retries. These options apply to the `check` command's
+API requests, including public address discovery with `myip`.
+
+### Cache controls
+
+Results are cached for 48 hours by default. Expired entries are fetched again.
+`--refresh` bypasses existing entries and saves successful fresh results;
+`--cache-ttl HOURS` changes the lifetime for that invocation. A TTL of zero always
+fetches fresh data. A failed refresh reports the failure rather than displaying
+old data. Existing `iprad cache info` and `iprad cache rm` commands still apply.
+
+```bash
+iprad check 1.1.1.1 --nokeys --refresh
+iprad check 1.1.1.1 --nokeys --cache-ttl 6
+```
+
+IPv6 ping and traceroute are available with `-pt` where raw ICMP permissions
+and connectivity allow them.
+
+### Development checks
+
+```bash
+python -m unittest discover -s tests -v
+python -m build
+```
+
+The tests use mocked API responses and a local HTTP server; no API key or external
+network access is required.
