@@ -5,6 +5,9 @@ from iprad.core.ipinfo_client import IPinfoClient
 from iprad.core.whois_client import WhoIsClient
 from iprad.core.ping_tracert_client import PingTracertClient
 from iprad.core.abuseipdb_client import AbuseIPDBClient
+from iprad.utils.functions import get_resolved_ip
+from iprad.utils.http import get_json
+import requests
 
 @click.group(invoke_without_command=True)
 @click.pass_context
@@ -18,25 +21,37 @@ def main(ctx) -> None:
 @click.argument('ip', required=True)
 @click.option('-pt', is_flag=True, help="Use ping and traceroute module, require sudo mode")
 @click.option('--nokeys', is_flag=True, help="Run without API key")
-def check(ip: str, pt: bool, nokeys: bool) -> None:
+@click.option('--retries', type=click.IntRange(0, 10), default=2, show_default=True,
+              help="Retries after transient HTTP failures (0 disables retries).")
+@click.option('--timeout', type=click.FloatRange(min=0, min_open=True), default=10,
+              show_default=True, help="Connect/read timeout per HTTP attempt in seconds.")
+@click.option('--refresh', is_flag=True, help="Bypass cached results and replace them with fresh data.")
+@click.option('--cache-ttl', type=click.FloatRange(min=0), default=48, show_default=True,
+              help="Cache lifetime in hours; 0 always fetches fresh data.")
+def check(ip: str, pt: bool, nokeys: bool, retries: int, timeout: float,
+          refresh: bool, cache_ttl: float) -> None:
     if ip == "myip":
-        import requests
-        response = requests.get("https://api.ipify.org?format=json")
-        if response.status_code == 200:
-            ip = response.json().get("ip")
-        else:
-            click.echo("Failed to retrieve your IP address.")
-            return
-        
+        try:
+            ip = get_json("https://api64.ipify.org?format=json",
+                          retries=retries, timeout=timeout)["ip"]
+        except (requests.RequestException, ValueError, KeyError, TypeError) as exc:
+            raise click.ClickException(f"Failed to retrieve your IP address: {exc}") from exc
+
+    resolved = get_resolved_ip(ip)
+    if resolved is None:
+        raise click.BadParameter("Unable to resolve an IPv4 or IPv6 address", param_hint="IP")
+    ip = resolved
+    options = dict(retries=retries, timeout=timeout, refresh=refresh, cache_ttl=cache_ttl)
+
     client_ipinfo = IPinfoClient()
-    client_ipinfo.check_ip(ip)
+    client_ipinfo.check_ip(ip, **options)
 
     client_whois = WhoIsClient()
-    client_whois.check_ip(ip)
+    client_whois.check_ip(ip, **options)
 
     if not nokeys:
         client_abuseipdb = AbuseIPDBClient()
-        client_abuseipdb.check_ip(ip)
+        client_abuseipdb.check_ip(ip, **options)
 
     #user can use ping and tracert
     if pt:

@@ -7,9 +7,9 @@ from iprad.utils.functions import get_flag, get_resolved_ip
 
 #IPinfo module
 class IPinfoClient:
-    BASE_URL = "https://ipinfo.io/"
+    BASE_URL = "https://ipinfo.io"
 
-    def check_ip(self, ip: str):
+    def check_ip(self, ip: str, **options):
 
         #resolve ip 
         ip_resolved = get_resolved_ip(ip)
@@ -18,10 +18,14 @@ class IPinfoClient:
         
         console = Console()
         
+        if ip_resolved is None:
+            console.print("Unable to resolve IP address:", ip, style="bold red", markup=False)
+            return None
+
         #Fetching data from ipinfo.io
         with console.status("[bold green]Fetching and processing Data...") as status:
             
-            data, from_cache = cache_processing("ipinfo", ip, url)
+            data, from_cache = cache_processing("ipinfo", ip_resolved, url, **options)
 
             if data is None:
                 return None

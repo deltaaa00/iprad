@@ -1,3 +1,5 @@
+import ipaddress
+
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
@@ -15,6 +17,10 @@ class PingTracertClient:
         console = Console()
         # console.clear()
         
+        if ip_resolved is None:
+            console.print("Unable to resolve IP address:", ip, style="bold red", markup=False)
+            return None
+
         #Pinging
         with console.status("[bold green]Pinging...") as status:
 
@@ -54,6 +60,10 @@ class PingTracertClient:
 
 
         console.print(Panel(info, title=f"[bold cyan]Ping Report for {ip} ({ip_resolved})"))
+
+        if ipaddress.ip_address(ip_resolved).version == 6:
+            console.print("IPv6 traceroute is not supported by icmplib; ping completed.")
+            return
 
         with console.status("[bold green]Traceroute in progress (it can take 20-60 seconds)") as status:
             try:

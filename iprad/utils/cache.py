@@ -1,9 +1,10 @@
 import json
 import requests
-import os
+import re
 from dotenv import load_dotenv, find_dotenv
 from os import getenv
 from iprad.utils.functions import normalize_rdap_data
+from iprad.utils.http import get_json
 
 from pathlib import Path
 from datetime import datetime
@@ -14,76 +15,54 @@ CACHE = Path(__file__).parent.parent.parent / '.cache'
 console = Console()
 
 load_dotenv(find_dotenv())
-ABUSEIPDB_API_KEY = getenv("ABUSEIPDB_API_KEY")
 
-def fetch(url: str, module_name: str, ip: str):
+def fetch(url: str, module_name: str, ip: str, *, retries=2, timeout=10):
     try:
-        if module_name not in ['abuseipdb']:
-            response = requests.get(url)
-            response.raise_for_status()
-
-            data = response.json()
-            data['created_at'] = datetime.now()
-
-            if module_name == 'whois':
-                data = normalize_rdap_data(data, ip)
-        else:
-            if module_name == 'abuseipdb':
-                params = {
-                    'ipAddress': ip,
-                    'maxAgeInDays': 180,
-                }
-                
-                headers = {
-                    'Key': ABUSEIPDB_API_KEY,
-                    'Accept': 'application/json' 
-                }
-                
-                response = requests.get(url, params=params, headers=headers)
-                response.raise_for_status()
-                
-                data = response.json()
-
-
-
+        kwargs = {}
+        if module_name == 'abuseipdb':
+            kwargs = {
+                "params": {"ipAddress": ip, "maxAgeInDays": 180},
+                "headers": {"Key": getenv("ABUSEIPDB_API_KEY"), "Accept": "application/json"},
+            }
+        data = get_json(url, retries=retries, timeout=timeout, **kwargs)
+        data['created_at'] = datetime.now()
+        if module_name == 'whois':
+            data = normalize_rdap_data(data, ip)
         return data
-
-               
-    except requests.exceptions.HTTPError as e:
-            console.print(f"[bold red]HTTP ERROR![/] Failed to fetch data. Status: {response.status_code}")
-    except requests.exceptions.ConnectionError:
-            console.print("[bold red]CONNECTION ERROR![/] Check internet connection")
-    except Exception as e:
-            console.print(f"[bold red]ERROR![/] {str(e)}")
-
+    except requests.exceptions.RequestException as exc:
+        console.print("HTTP request failed:", str(exc), style="bold red", markup=False)
+    except (ValueError, TypeError) as exc:
+        console.print("Invalid API response:", str(exc), style="bold red", markup=False)
     return None
-    
+
 def json_serial(obj):
     if isinstance(obj, datetime):
         return obj.isoformat()
     raise TypeError(f"Type {type(obj)} not serializable")
 
 
-def cache_processing(module_name: str, identifier: str, url=None):
+def cache_processing(module_name: str, identifier: str, url=None, *,
+                     refresh=False, cache_ttl=48, retries=2, timeout=10):
     #Cache function
-    cache_file = CACHE / module_name / f"{identifier.replace(".", "_")}.json"
+    safe_identifier = re.sub(r"[^a-zA-Z0-9_-]", "_", identifier)
+    cache_file = CACHE / module_name / f"{safe_identifier}.json"
     module_dir = CACHE / module_name
 
     from_cache = False
 
-    if cache_file.exists():
-        with open(cache_file, 'r') as f:
-            data = json.load(f)
-            created_at = data.get("created_at") if type(data.get("created_at")) == datetime else datetime.fromisoformat(data.get("created_at"))
-            time_diff = (datetime.now() - created_at).total_seconds() / 3600
-        if time_diff >= 48:
-            os.remove(cache_file)
-        from_cache = True
-        return data, from_cache
+    if cache_file.exists() and not refresh:
+        try:
+            with cache_file.open() as handle:
+                data = json.load(handle)
+            created_at = datetime.fromisoformat(data["created_at"])
+            age = (datetime.now(created_at.tzinfo) - created_at).total_seconds() / 3600
+            if 0 <= age < cache_ttl:
+                return data, True
+        except (ValueError, KeyError, TypeError, AttributeError):
+            pass  # A malformed cache entry should not prevent a fresh lookup.
+        cache_file.unlink()
 
-        
-    #identifier = ip
-    data = fetch(url, module_name, identifier)
+    data = fetch(url, module_name, identifier, retries=retries, timeout=timeout)
 
     if data is None:
         return None, None

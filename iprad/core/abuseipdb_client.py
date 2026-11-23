@@ -14,7 +14,7 @@ class AbuseIPDBClient:
         load_dotenv(find_dotenv())
         self.API_KEY = getenv("ABUSEIPDB_API_KEY")
 
-    def check_ip(self, ip: str):
+    def check_ip(self, ip: str, **options):
 
         if not self.API_KEY:
             rprint("[bold red]Error: ABUSEIPDB_API_KEY not found in environment variables. Please set it in your .env file.")
@@ -27,10 +27,14 @@ class AbuseIPDBClient:
         
         console = Console()
          
+        if ip_resolved is None:
+            console.print("Unable to resolve IP address:", ip, style="bold red", markup=False)
+            return None
+
         #Fetching data
         with console.status("[bold green]Fetching and processing Data...") as status:
             
-            data_raw, from_cache = cache_processing("abuseipdb", ip, url)
+            data_raw, from_cache = cache_processing("abuseipdb", ip_resolved, url, **options)
         
             if data_raw is None:
                 return None
@@ -53,5 +57,7 @@ class AbuseIPDBClient:
 
                     f"[bold purple]Is public:[/] {data.get('isPublic')}")
 
-        created_at = data.get("created_at") if type(data.get("created_at")) == datetime else datetime.fromisoformat(data.get("created_at"))
+        created_at = data_raw["created_at"]
+        if not isinstance(created_at, datetime):
+            created_at = datetime.fromisoformat(created_at)
         console.print(Panel(info, title=f"[bold magenta]AbuseIPDB Report for {ip} ({data.get('ipAddress')}) (API key needed)", subtitle=f"[bold blue]From Cache:[/] {from_cache}   [bold blue]Created at: [/]{created_at.strftime('%d.%m.%Y %H:%M')}"))
