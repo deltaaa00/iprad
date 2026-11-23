@@ -136,13 +136,14 @@ class IPv6AndCliTests(unittest.TestCase):
             self.assertEqual(fetch.call_args.args[1], '2001:db8::1')
             self.assertEqual(fetch.call_args.kwargs.get('url', fetch.call_args.args[-1]), url)
 
-    def test_ipv6_ping_skips_unsupported_traceroute(self):
+    def test_ipv6_target_is_forwarded_to_ping_and_traceroute(self):
         output = io.StringIO()
         with patch('iprad.core.ping_tracert_client.ping') as ping, \
              patch('iprad.core.ping_tracert_client.traceroute') as traceroute, \
              patch('iprad.core.ping_tracert_client.Console', return_value=Console(file=output)):
             ping.return_value.is_alive = False
+            traceroute.return_value = []
             PingTracertClient().check_ip('::1')
         ping.assert_called_once_with('::1', count=3, timeout=1)
-        traceroute.assert_not_called()
-        self.assertIn('IPv6 traceroute is not supported', output.getvalue())
+        traceroute.assert_called_once_with('::1', count=2, timeout=4, max_hops=20)
+        self.assertIn('traceroute report', output.getvalue())

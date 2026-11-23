@@ -138,9 +138,8 @@ iprad check 1.1.1.1 --nokeys --refresh
 iprad check 1.1.1.1 --nokeys --cache-ttl 6
 ```
 
-IPv6 ping is available with `-pt` where raw ICMP permissions and connectivity
-allow it. The current `icmplib` dependency supports IPv4 traceroute only, so IPv6
-checks display the ping report and an explanation instead of attempting traceroute.
+IPv6 ping and traceroute are available with `-pt` where raw ICMP permissions
+and connectivity allow them.
 
 ### Development checks
 
